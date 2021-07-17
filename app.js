@@ -1,25 +1,28 @@
 var createError = require("http-errors");
 var express = require("express");
+var bodyParser = require("body-parser");
+var multer = require("multer");
+var upload = multer();
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+var mongoose = require("mongoose");
+var dotenv = require("dotenv");
+
+dotenv.config({ path: "./.env.local" });
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-var postRouter = require("./routes/post");
+var messageRouter = require("./routes/message");
+var authRouter = require("./routes/auth");
 
 var app = express();
-var http = require("http").Server(app);
-var io = require("socket.io")(http);
 
-io.on("connection", () => {
-  console.log("a user is connected");
-});
+app.use(upload.array());
 
 app.use(cors());
 
-// view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
@@ -27,11 +30,31 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/build")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/post", postRouter);
+mongoose.connect(
+  process.env.MONGODB_URI,
+  {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  }
+);
+mongoose.connection.on("connected", () => {  
+  console.log("Connected to Socket-chat db");
+});
+mongoose.connection.on("error", (error) => {
+  console.log(error);
+});
+
+app.use("/api", indexRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/message", messageRouter);
+app.use("/api/auth", authRouter);
+
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/build/index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

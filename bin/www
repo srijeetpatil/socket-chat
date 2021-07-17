@@ -1,37 +1,58 @@
-#!/usr/bin/env node
+var app = require("../app");
+var debug = require("debug")("socket-server:server");
+var http = require("http");
+var verifySocket = require("../util/verify");
 
-/**
- * Module dependencies.
- */
-
-var app = require('../app');
-var debug = require('debug')('socket-server:server');
-var http = require('http');
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '3001');
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
+var port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
 
 var server = http.createServer(app);
+var io = require("socket.io")(server, {
+  cors: {
+    origin: '*', // add a host, protect from intruders
+  }
+});
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+var users = {};
+
+io.on("connection", function (socket) {
+  console.log("A user connected " + socket.id);   
+   
+  let username;  
+
+  socket.on('config', async function (data) {
+    await verifySocket(data.token)
+    .then(resolve => {
+      username = resolve;
+      if(resolve in users) {
+        delete users[resolve];        
+      }
+      users[resolve] = socket.id;      
+    })
+    .catch(reject => {})
+  });  
+
+  socket.on("send_message", async (data) => {
+    let message = data.message;   
+    let senderID = users[message.sender];
+    let recieverID = users[message.reciever];
+    if(message.reciever === "Global") {
+      io.emit("new_message", { docs: message });
+    } 
+    else {
+      io.to(senderID).emit("new_message", { docs: message });
+      io.to(recieverID).emit("new_message", { docs: message });
+    }               
+  })
+
+  socket.once("disconnect", function (data) {
+    delete users[username];    
+  });
+});
 
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
+server.on("error", onError);
+server.on("listening", onListening);
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -54,22 +75,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -83,8 +102,11 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Listening on " + bind);
 }
+
+
+app.io = io;
+
+module.exports = app;
