@@ -33,7 +33,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "/build")));
 
 mongoose.connect(
-  process.env.MONGODB_URI,
+  process.env.REACT_APP_MONGODB_URI,
   {
     useUnifiedTopology: true,
     useNewUrlParser: true,

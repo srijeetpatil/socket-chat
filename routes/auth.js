@@ -5,8 +5,7 @@ var User = require("../models/User");
 var bcrypt = require("bcrypt");
 var saltRounds = 10;
 
-var secret =
-  "0b7dd784235d5cfcd1cde1f00d5dc1afa80dc7abd290a4b23a52430ae7f270236c46a8c391a5cc23a845e4ae719c13944103bf875d1fa864ece4af981bf193f9";
+var secret = process.env.REACT_APP_SECRET;
 
 function generateAccessToken(username) {
   return jwt.sign(username, secret);
@@ -92,9 +91,9 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/verifyme", (req, res, next) => {
-  let token = req.headers.authorization;  
+  let token = req.headers.authorization;
   if (token) {
-    token = token.split("Token ")[1];    
+    token = token.split("Token ")[1];
     if (token) {
       User.findOne({ token: token }, (err, result) => {
         if (err) {
