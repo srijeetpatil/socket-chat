@@ -2,6 +2,7 @@ var app = require("../app");
 var debug = require("debug")("socket-server:server");
 var http = require("http");
 var verifySocket = require("../util/verify");
+var crypto = require("../util/crypto");
 
 var port = normalizePort(process.env.PORT || 3000);
 app.set("port", port);
@@ -15,6 +16,7 @@ var io = require("socket.io")(server, {
 
 var users = {};
 
+//The whole socket connections/configuration can be improved
 io.on("connection", function (socket) {
   console.log("A user connected " + socket.id);   
    
@@ -34,6 +36,7 @@ io.on("connection", function (socket) {
 
   socket.on("send_message", async (data) => {
     let message = data.message;   
+    message.content = crypto.decrypt(message.content);    
     let senderID = users[message.sender];
     let recieverID = users[message.reciever];
     if(message.reciever === "Global") {
