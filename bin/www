@@ -3,7 +3,7 @@ var debug = require("debug")("socket-server:server");
 var http = require("http");
 var verifySocket = require("../util/verify");
 
-var port = normalizePort(process.env.PORT || "3000");
+var port = normalizePort(process.env.PORT || 3000);
 app.set("port", port);
 
 var server = http.createServer(app);
