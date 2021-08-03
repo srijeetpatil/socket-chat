@@ -3,6 +3,7 @@ var router = express.Router();
 var Message = require("../models/Message");
 var User = require("../models/User");
 var extractor = require("../util/token");
+var crypto = require("../util/crypto");
 
 const verifyRequest = (req, res, next) => {
   let token = extractor(req);
@@ -79,6 +80,7 @@ const verifyUser = (req, res, next) => {
 router.post("/", verifyRequest, (req, res, next) => {
   let data = req.body;
   let message = data.message;
+  message = crypto.encrypt(message);
   let sender = data.sender;
   let reciever = data.reciever;
   let newMessage = new Message({
@@ -93,7 +95,7 @@ router.post("/", verifyRequest, (req, res, next) => {
       return next(err);
     } else {
       res.statusCode = 200;
-      res.json({ docs: docs });      
+      res.json({ docs: docs });
     }
   });
 });
@@ -107,8 +109,15 @@ router.get("/all", (req, res, next) => {
         res.json({ error: "Internal server error" });
         return next(err);
       } else {
+        let messages = result.map((message) => {
+          let content = message.content;
+          content = crypto.decrypt(content);
+          let obj = message;
+          message.content = content;
+          return obj;
+        });
         res.statusCode = 200;
-        res.json({ messages: result });
+        res.json({ messages: messages });
       }
     });
 });
@@ -136,12 +145,18 @@ router.post("/get-messages", verifyUser, (req, res, next) => {
               res.json({ error: "Internal server error" });
               return next(err);
             } else {
+              let messages = result.map((message) => {
+                let content = message.content;
+                content = crypto.decrypt(content);
+                let obj = message;
+                message.content = content;
+                return obj;
+              });
               res.statusCode = 200;
-              res.json({ messages: result });
+              res.json({ messages: messages });
             }
           });
-      }
-      else {
+      } else {
         res.statusCode = 400;
         res.json({ error: "User doesnt exist" });
       }
