@@ -1,0 +1,232 @@
+.container {
+  width: 100%;
+  margin: auto;
+  height: 90vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.heading {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  height: 4rem;
+  align-items: center;
+  box-shadow: 3px 5px 10px #ccc;
+}
+
+.people {
+  width: 25%;
+  overflow-x: hidden;
+  border-top: 0;
+  border-right: 0;
+}
+
+.chatBox {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  border-top: 0;
+}
+
+.window {
+  margin: 0.6rem 1rem;
+  max-height: 80vh;
+  height: 80vh;
+  overflow-x: hidden;
+  padding: 0.3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatTitle {
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.message_mine {
+  max-width: 70%;
+  width: max-content;
+  border-radius: 2px;
+  background-color: rgb(242, 255, 241);
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.message {
+  max-width: 70%;
+  width: max-content;
+  border-radius: 2px;
+  background-color: rgb(233, 230, 230);
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.time {
+  font-size: 10px;
+  margin-left: auto;
+}
+
+.messageUsername {
+  font-size: 10px;
+  margin-right: auto;
+}
+
+.editMessagebox {
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 0.3rem;
+  align-items: center;
+}
+
+.editMessage {
+  width: 80%;
+  height: 2rem;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 18px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: aliceblue;
+  overflow-wrap: break-word;
+  word-break: break-all
+}
+
+.postButton {
+  border: none;
+  outline: none;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 0.5rem;
+}
+
+.loginBox {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login_input {
+  border: solid 1px #ccc;
+  outline: none;
+  width: 80%;
+  background: transparent;
+  margin-top: 1rem;
+  padding: 1rem;
+  font-weight: 600;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+}
+
+.login_button {
+  padding: 0.7rem;
+  outline: none;
+  border: none;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  background-color: cadetblue;
+  color: white;
+  cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.userPanel {
+  font-weight: 600;
+  font-size: 18px;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.userLabel {
+  margin-left: 1rem;
+}
+
+.searchBox {
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.searchInput {
+  width: 70%;
+  background: transparent;
+  outline: none;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  border: solid thin #ccc;
+  padding: 0.5rem;
+  border-radius: 2px;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+}
+
+.person {
+  width: 100%;
+  font-weight: 600;
+  font-size: 18px;
+  color: rgb(61, 61, 61);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+@media only screen and (max-device-width: 1000px) and (-webkit-min-device-pixel-ratio: 1) {
+  .container {
+    width: 100%;
+    margin: auto;
+    height: 90vh;
+    display: block;
+  }
+  .chatBox {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    border: solid thin #ccc;
+    border-top: 0;
+  }
+  .people {
+    display: none;
+  }
+  .heading {
+    display: none;
+  }
+}
